@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Text File Generator Benchmark</string>
+    <string name="txtCredits">©2020. Developed by Bharath Vishal.G<a href="https://github.com/BharathVishal">\nGithub</a></string>
+
+</resources>
