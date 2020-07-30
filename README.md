@@ -1,7 +1,7 @@
 # Text-File-Generator-Benchmark-Android
 
 <h1 align=center>
-<img src="Logo/Icon.png" width=75%>
+<img src="Logo/Icon.png" width=25%>
 </h1>
 
 A simple app manager for Android written in Kotlin. View app related info, launch or uninstall apps.
@@ -31,10 +31,8 @@ A simple app manager for Android written in Kotlin. View app related info, launc
 
 &nbsp;
 ### Screenshots : 
-![Screenshot 1](https://github.com/BharathVishal/Text-File-Generator-Benchmark-Android
-/blob/master/Screenshots/1.png?s=20)
-![Screenshot 2](https://github.com/BharathVishal/Text-File-Generator-Benchmark-Android
-/blob/master/Screenshots/2.png?s=20)
+![Screenshot 1](https://github.com/BharathVishal/Text-File-Generator-Benchmark-Android/blob/master/Screenshots/1.png?s=20)
+![Screenshot 2](https://github.com/BharathVishal/Text-File-Generator-Benchmark-Android/blob/master/Screenshots/2.png?s=20)
 
 
 
