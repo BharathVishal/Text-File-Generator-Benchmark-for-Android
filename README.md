@@ -4,7 +4,7 @@
 <img src="Logo/Icon.png" width=23%>
 </h1>
 
-A text file generator and benchmark app for Android written in Kotlin. Generate random textfiles and benchmark the speed.
+A text file generator and benchmark app for Android written in Kotlin. Generate upto 50K textfiles (random) in an external storage directory and benchmark the speed.
 
 &nbsp;
 ### Usage:
