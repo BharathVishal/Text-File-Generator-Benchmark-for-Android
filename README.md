@@ -1,10 +1,10 @@
 # Text-File-Generator-Benchmark-Android
 
 <h1 align=center>
-<img src="Logo/Icon.png" width=25%>
+<img src="Logo/Icon.png" width=23%>
 </h1>
 
-A simple app manager for Android written in Kotlin. View app related info, launch or uninstall apps.
+A text file generator and benchmark app for Android written in Kotlin. Generate random textfiles, benchmark the speed.
 
 &nbsp;
 ### Usage:
@@ -15,14 +15,9 @@ A simple app manager for Android written in Kotlin. View app related info, launc
 
 &nbsp;
 ### Features :
-- View number of User/System apps
-- View User/System apps
-- View app name and package name
-- View app version
-- View app installed date
-- View app updated date
-- Launch app 
-
+- Use single or multiple async tasks to generate upto 50K .txt files
+- Delete all the generated files
+- Shows time taken to generate the text files
 
 &nbsp;
 ### Preview : 
