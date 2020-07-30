@@ -62,7 +62,7 @@
                         android:fontFamily="sans-serif-condensed"
                         android:gravity="center"
                         android:maxLines="10"
-                        android:text="Text File Generator/Benchmark"
+                        android:text="Text File Generator and Benchmark"
                         android:textAllCaps="true"
                         android:textSize="15sp" />
                 </LinearLayout>
@@ -159,7 +159,7 @@
                         android:fontFamily="sans-serif-condensed"
                         android:gravity="center_horizontal"
                         android:maxLines="3"
-                        android:text="Use single task to generate files" />
+                        android:text="Use a single task to generate files" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
