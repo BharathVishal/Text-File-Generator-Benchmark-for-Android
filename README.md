@@ -4,19 +4,20 @@
 <img src="Logo/Icon.png" width=23%>
 </h1>
 
-A text file generator and benchmark app for Android written in Kotlin. Generate random textfiles, benchmark the speed.
+A text file generator and benchmark app for Android written in Kotlin. Generate random textfiles and benchmark the speed.
 
 &nbsp;
 ### Usage:
 1. Open project and sync gradle.
 2. Modify the code to suit your needs.
 3. Watch out for more features.
+4. Files are generated under 'Internal Storage/FileBenchmark' folder.
 
 
 &nbsp;
 ### Features :
-- Use single or multiple async tasks to generate upto 50K .txt files
-- Delete all the generated files
+- Use single or multiple async tasks to generate upto 50K text files.
+- Delete the generated files
 - Shows time taken to generate the text files
 
 &nbsp;
