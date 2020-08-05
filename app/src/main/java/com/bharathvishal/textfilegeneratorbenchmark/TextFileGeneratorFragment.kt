@@ -64,7 +64,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             benchMarkProgress = ProgressDialog(contextCur)
             benchMarkProgress?.setProgressStyle(ProgressDialog.STYLE_SPINNER)
             benchMarkProgress?.setCancelable(true)
-            benchMarkProgress?.setTitle("Generating Dummy Text Files")
+            benchMarkProgress?.setTitle("Generating Text Files")
 
             generate_files_button?.setOnClickListener {
                 if (isStoragePermissionGranted(contextCur!!)) {
