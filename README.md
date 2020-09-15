@@ -40,7 +40,7 @@ A text file generator and benchmark app for Android written in Kotlin. Generate 
 &nbsp;
 
 ### SDK Info : 
-Min SDK : 21  | Target SDK : 30 | Gradle : 6.1.1  | Kotlin
+Min SDK : 21  | Target SDK : 29 | Gradle : 6.1.1  | Kotlin
 
 &nbsp;
 
