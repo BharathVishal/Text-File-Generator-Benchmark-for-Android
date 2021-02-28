@@ -25,3 +25,4 @@
   **[] $VALUES;
   public *;
 }
+-keep class kotlinx.coroutines.android.AndroidDispatcherFactory {*;}
