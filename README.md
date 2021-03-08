@@ -51,7 +51,7 @@ Android Studio 4.1.2
 
 &nbsp;
 
-© 2018-2020. Developed by Bharath Vishal G (https://github.com/BharathVishal).
+© 2018-2021. Developed by Bharath Vishal G (https://github.com/BharathVishal).
 Logo - material page icon.
 
 Thank you. :smile:
