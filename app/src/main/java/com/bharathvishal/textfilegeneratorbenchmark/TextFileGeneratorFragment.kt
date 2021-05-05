@@ -19,7 +19,7 @@ import android.view.ViewGroup
 import androidx.core.content.PermissionChecker
 import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_home.*
+import com.bharathvishal.textfilegeneratorbenchmark.databinding.FragmentHomeBinding
 import kotlinx.coroutines.*
 import java.io.File
 import java.io.RandomAccessFile
@@ -37,6 +37,11 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
     private var runnerGenerateFiles3: AsyncTaskRunnerGenerate? = null
     private var runnerGenerateFiles4: AsyncTaskRunnerGenerate? = null
 
+
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
+
     private var curGeneratedFilesCount: Int = 0
     private var filesAlreadyPresent: Int = 0
     var totalCount: Int = 10000
@@ -52,7 +57,9 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
+        val view = binding.root
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -66,19 +73,19 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             benchMarkProgress?.setCancelable(true)
             benchMarkProgress?.setTitle("Generating Text Files")
 
-            generate_files_button?.setOnClickListener {
+            binding.generateFilesButton.setOnClickListener {
                 if (isStoragePermissionGranted(contextCur!!)) {
                     curGeneratedFilesCount = 0
 
                     totalCount = try {
-                        Integer.parseInt(noOfFilesToGenerateEditText.text.toString())
+                        Integer.parseInt(binding.noOfFilesToGenerateEditText.text.toString())
                     } catch (e: java.lang.Exception) {
                         0
                     }
 
                     Log.d(tagTASK, "Current value : $totalCount")
 
-                    useSingleTaskToGenerate = threadTaskTypeSwitch.isChecked
+                    useSingleTaskToGenerate = binding.threadTaskTypeSwitch.isChecked
 
                     if (totalCount in 1..50000) {
                         //Proceed and launch async task
@@ -88,17 +95,17 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
                             runnerGenerateFiles1?.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR)
                         } else {
                             /*
-                            Algorithm
-                            Say total count of files is 15
-                            num1=3 (totalfilecount/4)
-                            num2=6 (num1 * 2)
-                            num3=9 (num1 * 3)
+                                    Algorithm
+                                    Say total count of files is 15
+                                    num1=3 (totalfilecount/4)
+                                    num2=6 (num1 * 2)
+                                    num3=9 (num1 * 3)
 
-                            Tasks start count:
-                            Async Task 1 : 1 to 3   (1 to num1)
-                            Async Task 2 : 4 to 6   (num1+1 to num2)
-                            Async Task 3 : 7 to 9  (num2+1 to num3)
-                            Async Task 4 : 10 to 15 (num3+1 to totalFileCount)*/
+                                    Tasks start count:
+                                    Async Task 1 : 1 to 3   (1 to num1)
+                                    Async Task 2 : 4 to 6   (num1+1 to num2)
+                                    Async Task 3 : 7 to 9  (num2+1 to num3)
+                                    Async Task 4 : 10 to 15 (num3+1 to totalFileCount)*/
 
                             val startNum1 = totalCount / 4
                             val startNum2 = startNum1 * 2
@@ -160,7 +167,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             }
 
 
-            cleanup_files?.setOnClickListener {
+            binding.cleanupFiles.setOnClickListener {
                 if (isStoragePermissionGranted(contextCur!!)) {
                     //Proceed and launch coroutine
                     contextCur?.let { taskRunnerCleanup(it) }
