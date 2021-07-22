@@ -4,6 +4,8 @@ package com.bharathvishal.textfilegeneratorbenchmark
 import android.content.Context
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
+import android.os.Looper.*
 import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +17,6 @@ class MainActivity : AppCompatActivity() {
     private var fragmentLayout: LinearLayout? = null
 
     //Fragment back button handling
-    private var handlerOb: Handler? = null
     private var doubleBackToExitPressedOnce: Boolean = false
     private val mRunnableBackButton = Runnable { doubleBackToExitPressedOnce = false }
 
@@ -32,7 +33,6 @@ class MainActivity : AppCompatActivity() {
         doubleBackToExitPressedOnce = false
 
         activityContextMain = this@MainActivity
-
 
         try {
             val mgr = supportFragmentManager
@@ -53,8 +53,10 @@ class MainActivity : AppCompatActivity() {
     override fun onBackPressed() {
         //part to handle back press
         //executed when stack_top=-1 and activity recreated value is No
-        handlerOb = Handler()
-        handlerOb?.postDelayed(mRunnableBackButton, 1500) // 1.50 seconds in ms
+        Handler(Looper.getMainLooper()).postDelayed({
+            mRunnableBackButton
+        }, 1500)
+        // 1.50 seconds in ms
 
 
         if (doubleBackToExitPressedOnce) {

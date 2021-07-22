@@ -2,22 +2,17 @@
 
 package com.bharathvishal.textfilegeneratorbenchmark
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.pm.PackageManager
 import android.os.AsyncTask
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.PermissionChecker
-import androidx.core.content.PermissionChecker.checkSelfPermission
 import androidx.fragment.app.Fragment
 import com.bharathvishal.textfilegeneratorbenchmark.databinding.FragmentHomeBinding
 import kotlinx.coroutines.*
@@ -27,7 +22,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 
 
-@Suppress("USELESS_CAST", "UNUSED_VARIABLE")
+@Suppress("UNUSED_VARIABLE")
 class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
     private var contextCur: Context? = null
     private var benchMarkProgress: ProgressDialog? = null
@@ -56,17 +51,16 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val view = binding.root
-        return view
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         if (isAdded) {
-            contextCur = activity as Context?
+            contextCur = activity
 
             benchMarkProgress = ProgressDialog(contextCur)
             benchMarkProgress?.setProgressStyle(ProgressDialog.STYLE_SPINNER)
@@ -74,110 +68,94 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             benchMarkProgress?.setTitle("Generating Text Files")
 
             binding.generateFilesButton.setOnClickListener {
-                if (isStoragePermissionGranted(contextCur!!)) {
-                    curGeneratedFilesCount = 0
+                curGeneratedFilesCount = 0
 
-                    totalCount = try {
-                        Integer.parseInt(binding.noOfFilesToGenerateEditText.text.toString())
-                    } catch (e: java.lang.Exception) {
-                        0
+                totalCount = try {
+                    Integer.parseInt(binding.noOfFilesToGenerateEditText.text.toString())
+                } catch (e: java.lang.Exception) {
+                    0
+                }
+
+                Log.d(tagTASK, "Current value : $totalCount")
+
+                useSingleTaskToGenerate = binding.threadTaskTypeSwitch.isChecked
+
+                if (totalCount in 1..50000) {
+                    //Proceed and launch async task
+                    if (useSingleTaskToGenerate) {
+                        runnerGenerateFiles1 =
+                            contextCur?.let { AsyncTaskRunnerGenerate(it, 1, totalCount) }
+                        runnerGenerateFiles1?.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR)
+                    } else {
+                        /*
+                                Algorithm
+                                Say total count of files is 15
+                                num1=3 (totalfilecount/4)
+                                num2=6 (num1 * 2)
+                                num3=9 (num1 * 3)
+
+                                Tasks start count:
+                                Async Task 1 : 1 to 3   (1 to num1)
+                                Async Task 2 : 4 to 6   (num1+1 to num2)
+                                Async Task 3 : 7 to 9  (num2+1 to num3)
+                                Async Task 4 : 10 to 15 (num3+1 to totalFileCount)*/
+
+                        val startNum1 = totalCount / 4
+                        val startNum2 = startNum1 * 2
+                        val startNum3 = startNum1 * 3
+
+                        Log.d(tagTASK, "Ranges : $startNum1 $startNum2 $startNum3")
+
+                        curAsyncTaskExecuted = 0
+
+                        //Task 1
+                        runnerGenerateFiles1 =
+                            contextCur?.let { AsyncTaskRunnerGenerate(it, 1, startNum1) }
+                        runnerGenerateFiles1?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+
+                        //Task 2
+                        runnerGenerateFiles2 =
+                            contextCur?.let {
+                                AsyncTaskRunnerGenerate(
+                                    it,
+                                    startNum1 + 1,
+                                    startNum2
+                                )
+                            }
+                        runnerGenerateFiles2?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+
+
+                        //Task 3
+                        runnerGenerateFiles3 =
+                            contextCur?.let {
+                                AsyncTaskRunnerGenerate(
+                                    it,
+                                    startNum2 + 1,
+                                    startNum3
+                                )
+                            }
+                        runnerGenerateFiles3?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
+
+
+                        //Task 4
+                        runnerGenerateFiles4 =
+                            contextCur?.let {
+                                AsyncTaskRunnerGenerate(
+                                    it,
+                                    startNum3 + 1,
+                                    totalCount
+                                )
+                            }
+                        runnerGenerateFiles4?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
                     }
-
-                    Log.d(tagTASK, "Current value : $totalCount")
-
-                    useSingleTaskToGenerate = binding.threadTaskTypeSwitch.isChecked
-
-                    if (totalCount in 1..50000) {
-                        //Proceed and launch async task
-                        if (useSingleTaskToGenerate) {
-                            runnerGenerateFiles1 =
-                                contextCur?.let { AsyncTaskRunnerGenerate(it, 1, totalCount) }
-                            runnerGenerateFiles1?.executeOnExecutor(AsyncTask.SERIAL_EXECUTOR)
-                        } else {
-                            /*
-                                    Algorithm
-                                    Say total count of files is 15
-                                    num1=3 (totalfilecount/4)
-                                    num2=6 (num1 * 2)
-                                    num3=9 (num1 * 3)
-
-                                    Tasks start count:
-                                    Async Task 1 : 1 to 3   (1 to num1)
-                                    Async Task 2 : 4 to 6   (num1+1 to num2)
-                                    Async Task 3 : 7 to 9  (num2+1 to num3)
-                                    Async Task 4 : 10 to 15 (num3+1 to totalFileCount)*/
-
-                            val startNum1 = totalCount / 4
-                            val startNum2 = startNum1 * 2
-                            val startNum3 = startNum1 * 3
-
-                            Log.d(tagTASK, "Ranges : $startNum1 $startNum2 $startNum3");
-
-                            curAsyncTaskExecuted = 0
-
-                            //Task 1
-                            runnerGenerateFiles1 =
-                                contextCur?.let { AsyncTaskRunnerGenerate(it, 1, startNum1) }
-                            runnerGenerateFiles1?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-
-                            //Task 2
-                            runnerGenerateFiles2 =
-                                contextCur?.let {
-                                    AsyncTaskRunnerGenerate(
-                                        it,
-                                        startNum1 + 1,
-                                        startNum2
-                                    )
-                                }
-                            runnerGenerateFiles2?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-
-
-                            //Task 3
-                            runnerGenerateFiles3 =
-                                contextCur?.let {
-                                    AsyncTaskRunnerGenerate(
-                                        it,
-                                        startNum2 + 1,
-                                        startNum3
-                                    )
-                                }
-                            runnerGenerateFiles3?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-
-
-                            //Task 4
-                            runnerGenerateFiles4 =
-                                contextCur?.let {
-                                    AsyncTaskRunnerGenerate(
-                                        it,
-                                        startNum3 + 1,
-                                        totalCount
-                                    )
-                                }
-                            runnerGenerateFiles4?.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR)
-                        }
-                    } else
-                        Utilities.showCustomToast("Enter a value between 0 and 50001", contextCur)
                 } else
-                    requestPermissions(
-                        arrayOf(
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ), 101
-                    )
+                    Utilities.showCustomToast("Enter a value between 0 and 50001", contextCur)
             }
 
 
             binding.cleanupFiles.setOnClickListener {
-                if (isStoragePermissionGranted(contextCur!!)) {
-                    //Proceed and launch coroutine
-                    contextCur?.let { taskRunnerCleanup(it) }
-                } else
-                    requestPermissions(
-                        arrayOf(
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                        ), 101
-                    )
+                //Proceed and launch coroutine
+                contextCur?.let { taskRunnerCleanup(it) }
             }
         }
     }
@@ -220,12 +198,14 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             Log.d(tagTASK, "Started task with startnum :$startNum")
             try {
                 var internalFile =
-                    File(Utilities.getInternalStorage().path + "/FileBenchmark/")
+                    File(context1?.filesDir!!.path + "/FileBenchmark/")
+
+                Log.d(tagTASK, "Internal file path  : " + internalFile.path.toString())
 
                 if (!internalFile.exists()) {
                     //create the directory first
                     val dirToCreate =
-                        File(Utilities.getInternalStorage().path + "/FileBenchmark/")
+                        File(context1.filesDir!!.path + "/FileBenchmark/")
                     if (!dirToCreate.exists())
                         dirToCreate.mkdirs()
                     internalFile = dirToCreate
@@ -254,7 +234,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
                         //Percent calculation
                         ++c
                         tempPercent = c / count.toFloat()
-                        resPub = (tempPercent * 100).toInt()
+                        //resPub = (tempPercent * 100).toInt()
 
                         ++curGeneratedFilesCount
 
@@ -319,7 +299,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             isGenerateFilesRunning = false
 
             val tempinternalFile =
-                File(Utilities.getInternalStorage().path + "/FileBenchmark/")
+                File(context1?.filesDir!!.path + "/FileBenchmark/")
             val tfilesAlreadyPresent = tempinternalFile.list()?.size!!
 
             ++curAsyncTaskExecuted
@@ -340,8 +320,9 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
 
                     if (useSingleTaskToGenerate) {
                         alertDialog.setMessage("Total time to generate $totalCount files : $totalTimeForGeneratingFiles ms\nUsed single task to generate files ")
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                        alertDialog.setButton(
+                            AlertDialog.BUTTON_NEUTRAL, "OK"
+                        ) { dialog, _ -> dialog.dismiss() }
 
                         if (!alertDialog.isShowing)
                             alertDialog.show()
@@ -349,8 +330,9 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
                         val timeToGenerate = totalTimeForGeneratingFiles / 4
                         alertDialog.setMessage("Total time to generate $totalCount files : $timeToGenerate ms\nUsed four parallel tasks to generate files ")
 
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                        alertDialog.setButton(
+                            AlertDialog.BUTTON_NEUTRAL, "OK"
+                        ) { dialog, _ -> dialog.dismiss() }
 
                         if (!alertDialog.isShowing && curAsyncTaskExecuted == 4)
                             alertDialog.show()
@@ -380,7 +362,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             Log.d(tagTASK, "cur async task being executed OnPostExecute : $curAsyncTaskExecuted")
 
             val tempinternalFile =
-                File(Utilities.getInternalStorage().path + "/FileBenchmark/")
+                File(context1?.filesDir!!.path + "/FileBenchmark/")
             val tfilesAlreadyPresent = tempinternalFile.list()?.size!!
 
 
@@ -398,8 +380,9 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
                     if (useSingleTaskToGenerate) {
                         alertDialog.setMessage("Total time to generate $totalCount files : $totalTimeForGeneratingFiles ms\nUsed single task to generate files ")
 
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                        alertDialog.setButton(
+                            AlertDialog.BUTTON_NEUTRAL, "OK"
+                        ) { dialog, _ -> dialog.dismiss() }
 
                         if (!alertDialog.isShowing)
                             alertDialog.show()
@@ -407,8 +390,9 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
                         val timeToGenerate = totalTimeForGeneratingFiles / 4
                         alertDialog.setMessage("Total time to generate $totalCount files : $timeToGenerate ms\nUsed four parallel tasks to generate files ")
 
-                        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
-                            DialogInterface.OnClickListener { dialog, which -> dialog.dismiss() })
+                        alertDialog.setButton(
+                            AlertDialog.BUTTON_NEUTRAL, "OK"
+                        ) { dialog, _ -> dialog.dismiss() }
 
                         if (!alertDialog.isShowing && curAsyncTaskExecuted == 4)
                             alertDialog.show()
@@ -469,13 +453,9 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
     //Coroutine to cleanup files
     private fun taskRunnerCleanup(con: Context) {
         //Coroutine
-        val contextRef: WeakReference<Context> = WeakReference(con)
-
         launch(Dispatchers.Default) {
-            val context1 = contextRef.get()
-
             val internalFile =
-                File(Utilities.getInternalStorage().path + "/FileBenchmark/")
+                File(con?.filesDir!!.path + "/FileBenchmark/")
 
             //Delete the folder if it exists previously
             if (internalFile.exists() && internalFile.path.toString() == "/storage/emulated/0/FileBenchmark")
@@ -484,42 +464,10 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             //UI Thread
             withContext(Dispatchers.Main) {
                 try {
-                    Utilities.showCustomToast("Deleted all generated files", contextCur)
+                    Utilities.showCustomToast("Deleted all generated files", con)
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
-            }
-        }
-    }
-
-    private fun isStoragePermissionGranted(con: Context): Boolean {
-        return if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(
-                    con,
-                    Manifest.permission.READ_EXTERNAL_STORAGE
-                ) == PermissionChecker.PERMISSION_GRANTED
-            ) {
-                Log.v("Permission", "Permission is granted")
-                true
-            } else {
-                Log.v("Permission", "Permission is revoked")
-                false
-            }
-        } else {
-            Log.v("Permission", "Permission is granted")
-            true
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == 101) {
-            if (permissions[0] == Manifest.permission.READ_EXTERNAL_STORAGE && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Utilities.showCustomToast("Storage permission granted", contextCur)
             }
         }
     }

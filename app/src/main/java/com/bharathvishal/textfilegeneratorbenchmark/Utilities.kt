@@ -8,11 +8,6 @@ import java.io.File
 
 object Utilities {
     //returns the path to the internal storage
-    fun getInternalStorage(): File {
-        return Environment.getExternalStorageDirectory()
-    }
-
-
     fun deleteFiles(curFile: File) {
         try {
             if (curFile.isDirectory)
