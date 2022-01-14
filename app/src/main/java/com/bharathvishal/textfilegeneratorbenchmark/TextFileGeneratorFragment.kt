@@ -78,6 +78,9 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
 
                 Log.d(tagTASK, "Current value : $totalCount")
 
+                //Cleanup the files generated in a previous benchmark
+                contextCur?.let { taskRunnerCleanup(it) }
+
                 useSingleTaskToGenerate = binding.threadTaskTypeSwitch.isChecked
 
                 if (totalCount in 1..50000) {
@@ -306,6 +309,8 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
 
             Log.d(tagTASK, "cur async task being executed OnCancelled : $curAsyncTaskExecuted")
 
+            //Cleanup the files generated
+            contextCur?.let { taskRunnerCleanup(it) }
 
             if (tfilesAlreadyPresent >= totalCount) {
                 try {
@@ -431,6 +436,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
                 }
             }
 
+
             benchMarkProgress?.setOnCancelListener { dialog ->
                 Log.d("bench1", "oncancel invoked")
                 if (isGenerateFilesRunning) {
@@ -457,8 +463,10 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             val internalFile =
                 File(con?.filesDir!!.path + "/FileBenchmark/")
 
+            Log.d("Async1","internal file directory : "+internalFile.path)
+
             //Delete the folder if it exists previously
-            if (internalFile.exists() && internalFile.path.toString() == "/storage/emulated/0/FileBenchmark")
+            if (internalFile.exists() && (internalFile.path.toString() == "/storage/emulated/0/FileBenchmark" || internalFile.path.toString().contains("com.bharathvishal.textfilegeneratorbenchmark/files/FileBenchmark")))
                 Utilities.deleteFiles(internalFile)
 
             //UI Thread
