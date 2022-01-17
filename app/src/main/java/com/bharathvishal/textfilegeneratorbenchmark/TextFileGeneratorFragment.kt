@@ -83,6 +83,8 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
 
                 useSingleTaskToGenerate = binding.threadTaskTypeSwitch.isChecked
 
+                useSingleTaskToGenerate=true
+
                 if (totalCount in 1..50000) {
                     //Proceed and launch async task
                     if (useSingleTaskToGenerate) {
