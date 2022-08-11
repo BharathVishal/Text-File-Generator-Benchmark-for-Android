@@ -11,7 +11,7 @@ object Utilities {
     fun deleteFiles(curFile: File) {
         try {
             if (curFile.isDirectory)
-                for (child in curFile.listFiles())
+                for (child in curFile.listFiles()!!)
                     deleteFiles(child)
 
             curFile.delete()

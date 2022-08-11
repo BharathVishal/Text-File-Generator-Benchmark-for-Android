@@ -5,9 +5,9 @@ import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.os.Looper.*
 import android.widget.LinearLayout
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 
@@ -47,25 +47,28 @@ class MainActivity : AppCompatActivity() {
         } catch (e: Exception) {
             e.printStackTrace()
         }
-    }
 
 
-    override fun onBackPressed() {
-        //part to handle back press
-        //executed when stack_top=-1 and activity recreated value is No
-        Handler(Looper.getMainLooper()).postDelayed({
-            mRunnableBackButton
-        }, 1500)
-        // 1.50 seconds in ms
+        onBackPressedDispatcher.addCallback(
+            this, // lifecycle owner
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    //part to handle back press
+                    //executed when stack_top=-1 and activity recreated value is No
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        mRunnableBackButton
+                    }, 1500)
+                    // 1.50 seconds in ms
 
 
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed()
-            return
-        } else {
-            showCustomToast("Please press BACK again to exit", activityContextMain!!)
-        }
-        doubleBackToExitPressedOnce = true
+                    if (doubleBackToExitPressedOnce) {
+                        finish()
+                    } else {
+                        showCustomToast("Please press BACK again to exit", activityContextMain!!)
+                    }
+                    doubleBackToExitPressedOnce = true
+                }
+            })
     }
 
 

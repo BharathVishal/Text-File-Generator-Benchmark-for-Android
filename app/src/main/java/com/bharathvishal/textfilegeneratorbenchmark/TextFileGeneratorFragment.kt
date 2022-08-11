@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package com.bharathvishal.textfilegeneratorbenchmark
 
 import android.annotation.SuppressLint
