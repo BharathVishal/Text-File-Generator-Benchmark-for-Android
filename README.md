@@ -40,13 +40,13 @@ A text file generator and benchmark app for Android written in Kotlin. Generate 
 &nbsp;
 
 ### SDK Info : 
-Min SDK : 23  | Target SDK : 33 | Gradle : 8.0.0  | Kotlin
+Min SDK : 23  | Target SDK : 34 | Gradle : 8.0.2  | Kotlin
 
 &nbsp;
 
 
 ### Android Studio Version : 
-Android Studio Flamingo | 2022.2.1
+Android Studio Flamingo | 2022.2.1 Patch 2
 
 
 
