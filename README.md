@@ -40,13 +40,13 @@ A text file generator and benchmark app for Android written in Kotlin. Generate 
 &nbsp;
 
 ### SDK Info : 
-Min SDK : 23  | Target SDK : 34 | Gradle : 8.1.3  | Kotlin
+Min SDK : 23  | Target SDK : 34 | Gradle : 8.2.0  | Kotlin
 
 &nbsp;
 
 
 ### Android Studio Version : 
-Android Studio Giraffe | 2022.3.1 Patch 3
+Android Studio Hedgehog | 2023.1.1
 
 
 
@@ -65,7 +65,7 @@ Android is a trademark of Google LLC.
 &nbsp;
 
 
-© 2018-2023. Developed by Bharath Vishal G (https://github.com/BharathVishal).
+© 2018-2024. Developed by Bharath Vishal G (https://github.com/BharathVishal).
 Logo - material page icon.
 
 Thank you. :slightly_smiling_face:
