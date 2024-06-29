@@ -206,6 +206,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
         var endNum: Int = endNum1
         var loopexecutionTimes = 0
 
+        @Deprecated("Deprecated in Java")
         @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
         override fun doInBackground(vararg voids: Void): Void? {
             val context1 = contextRef.get()
@@ -304,6 +305,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
         }
 
 
+        @Deprecated("Deprecated in Java")
         override fun onCancelled(result: Void?) {
             super.onCancelled(result)
             val context1 = contextRef.get()
@@ -366,6 +368,7 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             }
         }
 
+        @Deprecated("Deprecated in Java")
         @SuppressLint("SetTextI18n")
         override fun onPostExecute(aVoid: Void?) {
             super.onPostExecute(aVoid)
@@ -430,11 +433,13 @@ class TextFileGeneratorFragment : Fragment(), CoroutineScope by MainScope() {
             cancel(true)
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onProgressUpdate(vararg progress: Int?) {
             super.onProgressUpdate(*progress)
             benchMarkProgress?.setMessage("Generating files, Please wait \nProgress : $filesAlreadyPresent/$totalCount")
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onPreExecute() {
             val context1 = contextRef.get()
 
