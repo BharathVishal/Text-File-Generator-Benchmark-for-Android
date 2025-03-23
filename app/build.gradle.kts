@@ -6,16 +6,16 @@ plugins {
 
 android {
     namespace = "com.bharathvishal.textfilegeneratorbenchmark"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.bharathvishal.textfilegeneratorbenchmark"
         vectorDrawables {
             useSupportLibrary = true
         }
         minSdk = 23
-        targetSdk = 35
-        versionCode = 100
-        versionName = "3.2"
+        targetSdk = 36
+        versionCode = 102
+        versionName = "3.3"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures {
