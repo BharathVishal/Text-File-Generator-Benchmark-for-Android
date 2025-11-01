@@ -40,13 +40,15 @@ A text file generator and benchmark app for Android written in Kotlin. Generate 
 &nbsp;
 
 ### SDK Info : 
-Min SDK : 23  | Target SDK : 36 | Gradle : 8.11.0  | Kotlin
+Min SDK : 23 | Target SDK : 36 | Gradle : 8.13.0 | Kotlin | Jetpack Compose
+
+
 
 &nbsp;
 
 
 ### Android Studio Version : 
-Android Studio Narwhal | 2025.1.1
+Android Studio Narwhal 4 Feature Drop | 2025.1.4
 
 
 
